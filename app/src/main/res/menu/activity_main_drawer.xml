@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/menu_top">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_menu_home"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_genres_select"
+            android:icon="@drawable/ic_menu_search"
+            android:title="@string/menu_genres" />
+    </group>
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/menu_guest"
+        android:visible="true">
+        <item
+            android:id="@+id/nav_login"
+            android:icon="@drawable/ic_menu_login"
+            android:title="@string/menu_login" />
+
+        <item
+            android:id="@+id/nav_register"
+            android:icon="@drawable/ic_menu_register"
+            android:title="@string/menu_register" />
+    </group>
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/menu_user"
+        android:visible="false">
+        <item
+            android:id="@+id/nav_account"
+            android:icon="@drawable/ic_menu_account"
+            android:title="@string/menu_account" />
+
+        <item
+            android:id="@+id/nav_lists"
+            android:icon="@drawable/ic_menu_lists"
+            android:title="@string/menu_lists" />
+
+        <item
+            android:id="@+id/nav_signout"
+            android:icon="@drawable/ic_menu_signout"
+            android:title="@string/menu_signout" />
+    </group>
+
+</menu>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.nico.w4tchlist.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home"
+        >
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_lists"
+        android:name="com.nico.w4tchlist.ui.lists.ListsFragment"
+        android:label="@string/menu_lists"
+        tools:layout="@layout/fragment_lists"
+        >
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_genres"
+        android:name="com.nico.w4tchlist.ui.genres.GenresFragment"
+        android:label="@string/menu_genres"
+        tools:layout="@layout/fragment_genres"
+        ><argument android:name="genre_id"
+        app:argType="integer"
+        android:defaultValue="0"
+        app:nullable="false"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_genres_select"
+        android:name="com.nico.w4tchlist.ui.genres.GenresSelectFragment"
+        android:label="@string/menu_genres"
+        tools:layout="@layout/fragment_genres"
+        >
+        <action
+            android:id="@+id/action_genres_select_to_genres"
+            app:destination="@id/nav_genres">
+
+            <argument android:name="genre_id"
+                app:argType="integer"
+                android:defaultValue="0"
+                app:nullable="false"/>
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_search"
+        android:name="com.nico.w4tchlist.ui.search.SearchFragment"
+        android:label="@string/menu_search"
+        tools:layout="@layout/fragment_search"
+        >
+        <action
+            android:id="@+id/action_any_to_second"
+            app:destination="@id/nav_search">
+
+            <argument android:name="search_value"
+                app:argType="string"
+                app:nullable="false"/>
+        </action>
+
+        <argument android:name="search_value"
+            app:argType="string"
+            android:defaultValue=".null"
+            app:nullable="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_login"
+        android:name="com.nico.w4tchlist.ui.login.LoginFragment"
+        android:label="@string/menu_login"
+        tools:layout="@layout/fragment_login"
+        >
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_register"
+        android:name="com.nico.w4tchlist.ui.register.RegisterFragment"
+        android:label="@string/menu_register"
+        tools:layout="@layout/fragment_register"
+        >
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_account"
+        android:name="com.nico.w4tchlist.ui.profile.ProfileFragment"
+        android:label="@string/menu_account"
+        tools:layout="@layout/fragment_profile"
+        >
+    </fragment>
+
+</navigation>

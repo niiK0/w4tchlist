@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.profile.ProfileFragment">
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="horizontal"
+       android:theme="@style/Profile"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toTopOf="parent">
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+
+         <androidx.cardview.widget.CardView
+             android:id="@+id/cardView"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_gravity="top"
+             android:outlineSpotShadowColor="@color/gold"
+             app:cardBackgroundColor="?attr/cardBackgroundColor"
+             app:cardElevation="15dp"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+               <ImageView
+                   android:id="@+id/ivCard"
+                   android:layout_width="100dp"
+                   android:layout_height="100dp"
+                   android:contentDescription="profile image"
+                   android:padding="10dp"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toTopOf="parent"
+                   android:src="@mipmap/ic_profile_round"/>
+
+               <TextView
+                   android:id="@+id/tvCardUsername"
+                   android:layout_width="300dp"
+                   android:layout_height="40dp"
+                   android:layout_marginStart="32dp"
+                   android:layout_marginTop="8dp"
+                   android:layout_marginEnd="8dp"
+                   android:gravity="left|bottom"
+                   android:text="Username"
+                   android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                   android:textColor="?attr/colorPrimary"
+                   android:textSize="24dp"
+                   android:textStyle="bold"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintStart_toEndOf="@+id/ivCard"
+                   app:layout_constraintTop_toTopOf="parent" />
+
+               <TextView
+                   android:id="@+id/tvCardEmail"
+                   android:layout_width="300dp"
+                   android:layout_height="0dp"
+                   android:layout_marginStart="48dp"
+                   android:layout_marginEnd="8dp"
+                   android:layout_marginBottom="8dp"
+                   android:gravity="left|top"
+                   android:text="user@email.com"
+                   android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                   android:textColor="?attr/colorSecondary"
+                   android:textSize="16dp"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintStart_toEndOf="@+id/ivCard"
+                   app:layout_constraintTop_toBottomOf="@+id/tvCardUsername" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+         </androidx.cardview.widget.CardView>
+
+         <LinearLayout
+             android:layout_width="0dp"
+             android:layout_height="0dp"
+             android:orientation="vertical"
+             android:layout_marginTop="24dp"
+             android:layout_marginLeft="16dp"
+             android:layout_marginRight="16dp"
+             android:layout_marginBottom="16dp"
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:outlineSpotShadowColor="@color/gold"
+                app:cardBackgroundColor="?attr/colorSecondary"
+                app:cardCornerRadius="10dp"
+                >
+                  <LinearLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:orientation="vertical"
+                      >
+
+                     <androidx.constraintlayout.widget.ConstraintLayout
+                         android:layout_width="match_parent"
+                         android:layout_height="match_parent"
+                         >
+
+                        <ImageButton
+                            android:id="@+id/ibProfile"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:layout_marginTop="16dp"
+                            android:background="@android:color/transparent"
+                            android:contentDescription="Press to change"
+                            android:src="@mipmap/ic_profile"
+                            android:tooltipText="Press to change"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"></ImageButton>
+
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Press to change"
+                            android:textColor="?attr/colorOnPrimary"
+                            android:textSize="12dp"
+                            android:layout_marginBottom="16dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/ibProfile" />
+
+                        <EditText
+                            android:theme="@style/Profile"
+                            android:id="@+id/etUsername"
+                            android:layout_width="250dp"
+                            android:layout_height="60dp"
+                            android:layout_marginStart="16dp"
+                            android:backgroundTint="?attr/backgroundTint"
+                            android:clickable="false"
+                            android:drawableStart="@drawable/ic_menu_account"
+                            android:drawablePadding="8dp"
+                            android:drawableTint="?attr/colorOnPrimary"
+                            android:hint="Username"
+                            android:textCursorDrawable="@null"
+                            android:textColor="@color/white"
+                            android:inputType="textPersonName"
+                            android:textColorHint="?attr/colorOnSecondary"
+                            android:textSize="16dp"
+                            android:textColorHighlight="@color/darker_gold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+                        <EditText
+                            android:theme="@style/Profile"
+                            android:id="@+id/etEmail"
+                            android:layout_width="250dp"
+                            android:layout_height="60dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp"
+                            android:backgroundTint="?attr/backgroundTint"
+                            android:hint="user.email@email.com"
+                            android:textColorHint="?attr/colorOnSecondary"
+                            android:textSize="16dp"
+                            android:textColorHighlight="@color/darker_gold"
+                            android:textCursorDrawable="@null"
+                            android:textColor="@color/white"
+                            android:drawableStart="@drawable/ic_profile_email"
+                            android:drawableTint="?attr/colorOnPrimary"
+                            android:drawablePadding="8dp"
+                            android:clickable="false"
+                            android:maxLines="1"
+                            android:inputType="textEmailAddress"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/etUsername" />
+
+
+                        <EditText
+                            android:theme="@style/Profile"
+                            android:id="@+id/etPassword"
+                            android:layout_width="250dp"
+                            android:layout_height="60dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp"
+                            android:backgroundTint="?attr/backgroundTint"
+                            android:hint="***********"
+                            android:textColorHint="?attr/colorOnSecondary"
+                            android:textSize="16dp"
+                            android:textColorHighlight="@color/darker_gold"
+                            android:textCursorDrawable="@null"
+                            android:textColor="@color/white"
+                            android:drawableStart="@drawable/ic_profile_password"
+                            android:drawableTint="?attr/colorOnPrimary"
+                            android:drawablePadding="8dp"
+                            android:clickable="false"
+                            android:inputType="textPassword"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+
+                        <CheckBox
+                            android:id="@+id/cbUsername"
+                            android:layout_width="wrap_content"
+                            android:layout_height="60dp"
+                            android:buttonTint="?attr/colorOnPrimary"
+                            android:scaleX="1.5"
+                            android:scaleY="1.5"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/etUsername"
+                            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+                        <CheckBox
+                            android:id="@+id/cbEmail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="60dp"
+                            android:layout_marginTop="16dp"
+                            android:buttonTint="?attr/colorOnPrimary"
+                            android:scaleX="1.5"
+                            android:scaleY="1.5"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/etUsername"
+                            app:layout_constraintTop_toBottomOf="@+id/cbUsername" />
+
+                        <CheckBox
+                            android:id="@+id/cbPassword"
+                            android:layout_width="wrap_content"
+                            android:layout_height="60dp"
+                            android:layout_marginTop="16dp"
+                            android:buttonTint="?attr/colorOnPrimary"
+                            android:scaleX="1.5"
+                            android:scaleY="1.5"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/etUsername"
+                            app:layout_constraintTop_toBottomOf="@+id/cbEmail" />
+
+                        <CheckBox
+                            android:id="@+id/cbAdult"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginStart="16dp"
+                            android:buttonTint="?attr/colorOnPrimary"
+                            android:scaleX="1"
+                            android:scaleY="1"
+                            android:text="Show adult content"
+                            android:textSize="16dp"
+                            android:textColor="?attr/colorOnPrimary"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/etPassword" />
+
+                        <Button
+                            android:id="@+id/buttonSave"
+                            android:layout_width="200dp"
+                            android:layout_height="60dp"
+                            android:layout_marginBottom="16dp"
+                            android:backgroundTint="?attr/background"
+                            android:text="Save"
+                            android:textColor="?attr/colorPrimary"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+
+
+                     </androidx.constraintlayout.widget.ConstraintLayout>
+
+                  </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+         </LinearLayout>
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+   </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

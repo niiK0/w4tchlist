@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">W4tchList</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Guest</string>
+    <string name="nav_header_subtitle">guest@w4tchlist.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home - Trending now</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_genres">Genres</string>
+    <string name="menu_login">Sign in</string>
+    <string name="menu_register">Register</string>
+    <string name="menu_account">Account</string>
+    <string name="menu_lists">Lists</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_signout">Sign out</string>
+</resources>
