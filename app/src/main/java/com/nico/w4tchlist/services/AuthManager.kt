@@ -24,12 +24,12 @@ class AuthManager {
         this.context = context
     }
 
-    fun register(sessionId : String, username: String, email: String, password: String, callback: (Boolean) -> Unit) {
+    fun register(username: String, email: String, password: String, callback: (Boolean) -> Unit) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     updateUserUsername(username)
-                    database.createUser(auth.currentUser!!.uid, sessionId)
+                    database.createUser(auth.currentUser!!.uid)
                     updateUI()
                     callback(true)
                 } else {
@@ -39,11 +39,10 @@ class AuthManager {
             }
     }
 
-    fun login(sessionId: String, email: String, password: String, callback: (Boolean) -> Unit) {
+    fun login(email: String, password: String, callback: (Boolean) -> Unit) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    database.updateSessionId(auth.currentUser!!.uid, sessionId)
                     updateUI()
                     callback(true)
                 } else {

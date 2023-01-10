@@ -34,10 +34,6 @@ class RegisterFragment : Fragment() {
     private val binding get() = _binding!!
 
     val authManager = AuthManager()
-    val sessionFuns = SessionsFuns()
-    var username = ""
-    var email = ""
-    var password = ""
 
     private lateinit var activity: AppCompatActivity
 
@@ -62,9 +58,9 @@ class RegisterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnLogin.setOnClickListener {
-            username = binding.etUsername.text.toString().trim()
-            email = binding.etEmail.text.toString().trim()
-            password = binding.etPassword.text.toString().trim()
+            val username = binding.etUsername.text.toString().trim()
+            val email = binding.etEmail.text.toString().trim()
+            val password = binding.etPassword.text.toString().trim()
 
             if (username.isEmpty()) {
                 binding.etUsername.error = "Username field cannot be empty"
@@ -79,39 +75,17 @@ class RegisterFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            //CREATE USER SESSION
-            sessionFuns.generateNewToken() { token : String ->
-                val authorizationUrl = "https://www.themoviedb.org/authenticate/$token?redirect_to=tmdb://callback"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(authorizationUrl))
-                authorizationContract.launch(intent)
-            }
-        }
-    }
+            authManager.register(username, email, password) { success ->//
+                if (success) {
+                    Toast.makeText(this.context, "Successfully registered", Toast.LENGTH_SHORT).show()
 
-    val authorizationContract = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val requestToken = result.data?.getStringExtra("request_token")!!
-            val session = UserSession(requestToken)
-            sessionFuns.createNewSession(session) { sessionId : String ->
-                authManager.register(sessionId, username, email, password) { success ->//
-                    if (success) {
-                        Toast.makeText(this.context, "Successfully registered", Toast.LENGTH_SHORT).show()
-
-                        val navController = findNavController()
-                        if(navController.currentDestination?.id != R.id.nav_home){
-                            navController.navigate(R.id.nav_home)
-                        }
-                    } else {
-                        Toast.makeText(this.context, "There was an error", Toast.LENGTH_SHORT).show()
+                    val navController = findNavController()
+                    if(navController.currentDestination?.id != R.id.nav_home){
+                        navController.navigate(R.id.nav_home)
                     }
+                } else {
+                    Toast.makeText(this.context, "There was an error", Toast.LENGTH_SHORT).show()
                 }
-            }
-        } else {
-            Toast.makeText(this.context, "There was an error", Toast.LENGTH_SHORT).show()
-            val navController = findNavController()
-            if(navController.currentDestination?.id != R.id.nav_home){
-                navController.navigate(R.id.nav_home)
             }
         }
     }

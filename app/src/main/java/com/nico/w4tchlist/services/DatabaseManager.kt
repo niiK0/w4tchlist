@@ -15,11 +15,10 @@ class DatabaseManager {
     var valueReceived = false
     val latch = CountDownLatch(1)
     var adult : Boolean = false
-    var sessionId : String = ""
 
-    fun createUser(uid: String, sessionId: String){
+    fun createUser(uid: String){
         val ref = database.getReference("Users")
-        val user = User(false, sessionId)
+        val user = User(false)
         ref.child(uid).setValue(user)
     }
 
@@ -56,40 +55,5 @@ class DatabaseManager {
     fun updateAdult(adult: Boolean, uid: String){
         val ref = database.getReference("Users").child(uid)
         ref.child("adult").setValue(adult)
-    }
-
-    fun getSessionIdValue(uid: String){
-        val ref = database.getReference("Users").child(uid)
-
-        val valueEventListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // This method is triggered whenever the data at the reference changes
-                if (dataSnapshot.exists()) {
-                    // The child node with the given ID exists
-                    val user = dataSnapshot.getValue(User::class.java)
-                    val getSessionId = user?.sessionId
-                    sessionId = getSessionId!!
-                    valueReceived = true
-                    latch.countDown()
-                } else {
-                    Log.w("TAG", "error on getting field")
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // This method is triggered when there is an error accessing the reference
-                Log.w("TAG", "checkUserExists:onCancelled", databaseError.toException())
-            }
-        }
-        ref.addListenerForSingleValueEvent(valueEventListener)
-    }
-
-    fun getUserSessionId(): String{
-        return this.sessionId
-    }
-
-    fun updateSessionId(sessionId: String, uid: String){
-        val ref = database.getReference("Users").child(uid)
-        ref.child("session_id").setValue(sessionId)
     }
 }

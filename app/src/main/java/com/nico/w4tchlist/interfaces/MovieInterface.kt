@@ -8,7 +8,7 @@ import retrofit2.http.Query
 
 interface MovieInterface{
     @GET("/3/discover/movie?api_key=718b47ffeddfe88efd8e9873b2fd207a")
-    fun getMovieList(
+    fun genreMovie(
         @Query("with_genres") query: Int,
         @Query("page") page: Int,
         @Query("adult") adult: Boolean
@@ -18,14 +18,14 @@ interface MovieInterface{
     fun getGenresList() : Call<GenreResponse>
 
     @GET("/3/search/movie?api_key=718b47ffeddfe88efd8e9873b2fd207a")
-    fun getMovieList(
+    fun searchMovie(
         @Query("query") query: String,
         @Query("page") page: Int,
         @Query("include_adult") adult: Boolean
     ) : Call<MovieResponse>
 
     @GET("/3/movie/popular?api_key=718b47ffeddfe88efd8e9873b2fd207a")
-    fun getMovieList(
+    fun popularMovie(
         @Query("page") page: Int
     ) : Call<MovieResponse>
 

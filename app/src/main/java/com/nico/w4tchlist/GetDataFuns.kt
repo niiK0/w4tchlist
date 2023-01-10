@@ -28,7 +28,7 @@ class GetDataFuns {
     }
 
     fun getMovieTrendingData(page: Int, callback: (List<Movie>, Int, Int) -> Unit){
-        apiService.getMovieList(page).enqueue(object : Callback<MovieResponse> {
+        apiService.popularMovie(page).enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>){
                 return callback(response.body()!!.movies, response.body()!!.currentPage, response.body()!!.totalPages)
             }
@@ -41,7 +41,7 @@ class GetDataFuns {
     }
 
     fun getMovieData(searchValue : String, page: Int, adult: Boolean, callback: (List<Movie>, Int, Int) -> Unit){
-        apiService.getMovieList(searchValue, page, adult).enqueue(object : Callback<MovieResponse> {
+        apiService.searchMovie(searchValue, page, adult).enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>){
                 return callback(response.body()!!.movies, response.body()!!.currentPage, response.body()!!.totalPages)
             }
@@ -54,7 +54,7 @@ class GetDataFuns {
     }
 
     fun getMovieGenreData(genreId : Int, page: Int, adult: Boolean, callback: (List<Movie>, Int, Int) -> Unit){
-        apiService.getMovieList(genreId, page, adult).enqueue(object : Callback<MovieResponse> {
+        apiService.genreMovie(genreId, page, adult).enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>){
                 return callback(response.body()!!.movies, response.body()!!.currentPage, response.body()!!.totalPages)
             }
