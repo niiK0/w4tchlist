@@ -40,6 +40,19 @@ class GetDataFuns {
         })
     }
 
+    fun getSpecificMovieData(id: Int, callback: (Movie) -> Unit){
+        apiService.getMovie(id).enqueue(object : Callback<Movie> {
+            override fun onResponse(call: Call<Movie>, response: Response<Movie>){
+                return callback(response.body()!!)
+            }
+
+            override fun onFailure(call: Call<Movie>, t: Throwable) {
+                Log.d("erro?", "deu erro po")
+            }
+
+        })
+    }
+
     fun getMovieData(searchValue : String, page: Int, adult: Boolean, callback: (List<Movie>, Int, Int) -> Unit){
         apiService.searchMovie(searchValue, page, adult).enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>){

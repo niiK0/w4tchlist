@@ -5,8 +5,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class NewSessionResponse(
-    val success : Boolean,
-    @SerializedName("session_id")
-    val session_id: String
+data class ProdCompany(
+    val id : Int?,
+    val name : String?
 ) : Parcelable

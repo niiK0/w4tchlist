@@ -9,6 +9,7 @@
 
     <string name="menu_home">Home - Trending now</string>
     <string name="menu_search">Search</string>
+    <string name="menu_movie">Movie Details</string>
     <string name="menu_genres">Genres</string>
     <string name="menu_login">Sign in</string>
     <string name="menu_register">Register</string>

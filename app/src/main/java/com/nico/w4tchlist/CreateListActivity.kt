@@ -30,33 +30,14 @@ class CreateListActivity : AppCompatActivity(){
         confirmButton = findViewById(R.id.btnConfirm)
         backButton = findViewById(R.id.btnBack)
 
-        val listsFuns = ListsFuns()
-
         confirmButton.setOnClickListener {
             val name = nameEditText.text.toString()
             val description = descriptionEditText.text.toString()
             val isPrivate = privateCheckBox.isChecked
 
-            database.getAdultValue(authManager.auth.currentUser!!.uid)
-            Thread {
-                database.latch.await()
-
-                val sessionId = database.getUserSessionId()
-                val newList = MovieList(name, description, "en", isPrivate)
-
-                // Call the function to add the item
-                listsFuns.createList(sessionId, newList) { success : Boolean ->
-                    if(success){
-                        Toast.makeText(this, "List successfully created.", Toast.LENGTH_SHORT).show()
-                    }else{
-                        Toast.makeText(this, "There was an error.", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }.start()
-
-
-            // Finish the activity and return to the fragment
-            finish()
+            database.getAdultValue(authManager.auth.currentUser!!.uid){
+                val adult = it
+            }
         }
 
         backButton.setOnClickListener {

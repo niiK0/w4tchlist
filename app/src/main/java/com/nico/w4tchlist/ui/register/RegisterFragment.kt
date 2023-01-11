@@ -1,28 +1,17 @@
 package com.nico.w4tchlist.ui.register
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
-import com.nico.w4tchlist.MovieAdapter
 import com.nico.w4tchlist.R
-import com.nico.w4tchlist.SessionsFuns
 import com.nico.w4tchlist.databinding.FragmentRegisterBinding
-import com.nico.w4tchlist.models.Movie
-import com.nico.w4tchlist.models.UserSession
 import com.nico.w4tchlist.services.AuthManager
 
 class RegisterFragment : Fragment() {
@@ -57,7 +46,7 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnLogin.setOnClickListener {
+        binding.btnRegister.setOnClickListener {
             val username = binding.etUsername.text.toString().trim()
             val email = binding.etEmail.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
@@ -86,6 +75,13 @@ class RegisterFragment : Fragment() {
                 } else {
                     Toast.makeText(this.context, "There was an error", Toast.LENGTH_SHORT).show()
                 }
+            }
+        }
+
+        binding.btnLogin.setOnClickListener {
+            val navController = findNavController()
+            if(navController.currentDestination?.id != R.id.nav_login){
+                navController.navigate(R.id.nav_login)
             }
         }
     }

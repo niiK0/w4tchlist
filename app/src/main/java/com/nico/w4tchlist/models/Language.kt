@@ -5,9 +5,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class NewTokenResponse(
-    val success : Boolean,
-    val expires_at: String,
-    @SerializedName("request_token")
-    val token: String
+data class Language(
+    @SerializedName("english_name")
+    val name : String?
 ) : Parcelable

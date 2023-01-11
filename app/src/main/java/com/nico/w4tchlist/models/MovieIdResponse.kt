@@ -5,12 +5,11 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Movie(
-    val id : Int?,
+data class MovieIdResponse(
+    val id : String?,
     val title : String?,
     val adult : Boolean?,
     val genres: List<Genre>?,
-    val genres_ids: List<Genre>?,
 
     @SerializedName("overview")
     val description : String?,
@@ -32,4 +31,5 @@ data class Movie(
 
     @SerializedName("spoken_languages")
     val languages : List<Language>?
-    ) : Parcelable
+
+) : Parcelable

@@ -103,14 +103,9 @@ class ProfileFragment : Fragment() {
         }
 
         // Set stuff for adult checkbox
-        database.getAdultValue(authManager.auth.currentUser!!.uid)
-        Thread {
-            database.latch.await()
-
-            val adult = database.getUserAdult()
-
-            binding.cbAdult.isChecked = adult
-        }.start()
+        database.getAdultValue(authManager.auth.currentUser!!.uid){
+            binding.cbAdult.isChecked = it
+        }
 
         // Set listener for profile picture ImageButton
         binding.ibProfile.setOnClickListener {

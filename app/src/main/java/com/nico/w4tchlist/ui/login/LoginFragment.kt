@@ -11,9 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.nico.w4tchlist.R
-import com.nico.w4tchlist.SessionsFuns
 import com.nico.w4tchlist.databinding.FragmentLoginBinding
-import com.nico.w4tchlist.models.UserSession
 import com.nico.w4tchlist.services.AuthManager
 
 class LoginFragment : Fragment() {
@@ -59,23 +57,23 @@ class LoginFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            //CREATE USER SESSION
-            val sessionFuns = SessionsFuns()
-            sessionFuns.generateNewToken() { token : String ->
-                val session = UserSession(token)
-                sessionFuns.createNewSession(session) { sessionId : String ->
-                    authManager.login(sessionId, email, password) { success ->//
-                        if (success) {
-                            Toast.makeText(this.context, "Successfully signed in", Toast.LENGTH_SHORT).show()
-                            val navController = findNavController()
-                            if(navController.currentDestination?.id != R.id.nav_home){
-                                navController.navigate(R.id.nav_home)
-                            }
-                        } else {
-                            Toast.makeText(this.context, "There was an error", Toast.LENGTH_SHORT).show()
-                        }
+            authManager.login(email, password) { success ->//
+                if (success) {
+                    Toast.makeText(this.context, "Successfully signed in", Toast.LENGTH_SHORT).show()
+                    val navController = findNavController()
+                    if(navController.currentDestination?.id != R.id.nav_home){
+                        navController.navigate(R.id.nav_home)
                     }
+                } else {
+                    Toast.makeText(this.context, "There was an error", Toast.LENGTH_SHORT).show()
                 }
+            }
+        }
+
+        binding.btnRegister.setOnClickListener {
+            val navController = findNavController()
+            if(navController.currentDestination?.id != R.id.nav_register){
+                navController.navigate(R.id.nav_register)
             }
         }
     }

@@ -9,12 +9,10 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.nico.w4tchlist.models.User
 import java.util.concurrent.CountDownLatch
+import javax.security.auth.callback.Callback
 
 class DatabaseManager {
     val database = Firebase.database("https://w4tchlist-bb8fd-default-rtdb.europe-west1.firebasedatabase.app/")
-    var valueReceived = false
-    val latch = CountDownLatch(1)
-    var adult : Boolean = false
 
     fun createUser(uid: String){
         val ref = database.getReference("Users")
@@ -22,7 +20,7 @@ class DatabaseManager {
         ref.child(uid).setValue(user)
     }
 
-    fun getAdultValue(uid: String){
+    fun getAdultValue(uid: String, callback: (Boolean) -> Unit){
         val ref = database.getReference("Users").child(uid)
 
         val valueEventListener = object : ValueEventListener {
@@ -31,10 +29,7 @@ class DatabaseManager {
                 if (dataSnapshot.exists()) {
                     // The child node with the given ID exists
                     val user = dataSnapshot.getValue(User::class.java)
-                    val getAdult = user?.adult
-                    adult = getAdult.toString() != "false"
-                    valueReceived = true
-                    latch.countDown()
+                    callback(user?.adult?:false)
                 } else {
                     Log.w("TAG", "error on getting field")
                 }
@@ -46,10 +41,6 @@ class DatabaseManager {
             }
         }
         ref.addListenerForSingleValueEvent(valueEventListener)
-    }
-
-    fun getUserAdult(): Boolean{
-        return this.adult
     }
 
     fun updateAdult(adult: Boolean, uid: String){

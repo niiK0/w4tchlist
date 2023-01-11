@@ -59,11 +59,8 @@ class GenresFragment : Fragment() {
         val bundle = requireArguments()
         var genre_id = 0
 
-        database.getAdultValue(authManager.auth.currentUser!!.uid)
-        Thread{
-            database.latch.await()
-
-            val adult = database.getUserAdult()
+        database.getAdultValue(authManager.auth.currentUser!!.uid){
+            val adult = it
 
             if(bundle != null){
                 val args = GenresFragmentArgs.fromBundle(bundle)
@@ -106,7 +103,7 @@ class GenresFragment : Fragment() {
                     Toast.makeText(this.context, "You are on the first page.", Toast.LENGTH_SHORT).show()
                 }
             }
-        }.start()
+        }
     }
 
     override fun onDestroyView() {

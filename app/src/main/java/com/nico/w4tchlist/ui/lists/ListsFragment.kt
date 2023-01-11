@@ -5,12 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nico.w4tchlist.CreateListActivity
-import com.nico.w4tchlist.ListsFuns
 import com.nico.w4tchlist.databinding.FragmentListsBinding
 
 class ListsFragment : Fragment() {
@@ -20,7 +18,6 @@ class ListsFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val listsViewModel =
@@ -35,7 +32,6 @@ class ListsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val listsFuns = ListsFuns()
 
         binding.rvListsList.layoutManager = LinearLayoutManager(this.context)
         binding.rvListsList.setHasFixedSize(true)
