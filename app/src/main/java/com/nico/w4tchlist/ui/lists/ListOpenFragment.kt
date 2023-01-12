@@ -73,7 +73,9 @@ class ListOpenFragment : Fragment() {
 
             adapter.setOnItemClickListener(object: MovieAdapterList.onItemClickListener{
                 override fun onItemClick(position: Int) {
-//                //open movie? no time to make
+                    val intent = Intent(context, MovieActivity::class.java)
+                    intent.putExtra("movie", movieList.movies[position])
+                    startActivity(intent)
                 }
             })
 
@@ -91,17 +93,32 @@ class ListOpenFragment : Fragment() {
                                     if(userMovieList != null){
                                         val newUserMovieList = userMovieList.toMutableList()
                                         newUserMovieList.remove(movieLid)
-                                        database.updateUserMovieList(authManager.auth.currentUser!!.uid, newUserMovieList){
-                                            Toast.makeText(context, "List deleted", Toast.LENGTH_SHORT).show()
-                                            val navController = findNavController()
-                                            navController.navigate(R.id.nav_lists)
+                                        database.updateListMovieCount(movieLid, newList.size) {
+                                            database.updateUserMovieList(
+                                                authManager.auth.currentUser!!.uid,
+                                                newUserMovieList
+                                            ) {
+                                                Toast.makeText(
+                                                    context,
+                                                    "List deleted",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                val navController = findNavController()
+                                                navController.navigate(R.id.nav_lists)
+                                            }
                                         }
                                     }
                                 }
                             }
                         }else{
-                            database.updateListMovies(movieLid, newList){
-                                Toast.makeText(context, "Movie successfully deleted", Toast.LENGTH_SHORT).show()
+                            database.updateListMovieCount(movieLid, newList.size) {
+                                database.updateListMovies(movieLid, newList) {
+                                    Toast.makeText(
+                                        context,
+                                        "Movie successfully deleted",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
                         }
                     }

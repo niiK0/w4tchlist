@@ -77,49 +77,61 @@ class ListsFragment : Fragment() {
         //          get movelists from the user's list
                     for(list in userMovieList){
                         database.getMovieList(list) { movieList ->
+                            if(movieList != null) {
+                                movieLists.add(movieList!!)
 
-                            movieLists.add(movieList!!)
+                                val adapter = ListsAdapter(movieLists)
+                                binding.rvListsList.adapter = adapter
 
-                            val adapter = ListsAdapter(movieLists)
-                            binding.rvListsList.adapter = adapter
+                                adapter.setOnItemClickListener(object :
+                                    ListsAdapter.onItemClickListener {
+                                    override fun onItemClick(position: Int) {
+                                        val navController = findNavController()
+                                        val directions =
+                                            ListsFragmentDirections.actionListsToListOpen(
+                                                movieLists[position],
+                                                list
+                                            )
+                                        navController.navigate(directions)
+                                    }
+                                })
 
-                            adapter.setOnItemClickListener(object : ListsAdapter.onItemClickListener {
-                                override fun onItemClick(position: Int) {
-                                    val navController = findNavController()
-                                    val directions = ListsFragmentDirections.actionListsToListOpen(
-                                        movieLists[position],
-                                        list
-                                    )
-                                    navController.navigate(directions)
-                                }
-                            })
-
-                            adapter.setOnItemClickListener(object : ListsAdapter.onItemLongClickListener {
-                                override fun onItemLongClick(position: Int): Boolean {
-                                    val builder = AlertDialog.Builder(requireContext())
-                                    builder.setTitle("Delete list")
-                                    builder.setMessage("Are you sure you want to delete this list?")
-                                    builder.setPositiveButton("Delete") { _, _ ->
-                                        database.deleteList(list){
-                                            database.getUserMovieList(authManager.auth.currentUser!!.uid){ userMovieList ->
-                                                val newUserMovieList = userMovieList!!.toMutableList()
-                                                newUserMovieList.remove(list)
-                                                database.updateUserMovieList(authManager.auth.currentUser!!.uid, newUserMovieList){
-                                                    Toast.makeText(context, "List deleted", Toast.LENGTH_SHORT).show()
-                                                    val navController = findNavController()
-                                                    navController.navigate(R.id.nav_lists)
+                                adapter.setOnItemClickListener(object :
+                                    ListsAdapter.onItemLongClickListener {
+                                    override fun onItemLongClick(position: Int): Boolean {
+                                        val builder = AlertDialog.Builder(requireContext())
+                                        builder.setTitle("Delete list")
+                                        builder.setMessage("Are you sure you want to delete this list?")
+                                        builder.setPositiveButton("Delete") { _, _ ->
+                                            database.deleteList(list) {
+                                                database.getUserMovieList(authManager.auth.currentUser!!.uid) { userMovieList ->
+                                                    val newUserMovieList =
+                                                        userMovieList!!.toMutableList()
+                                                    newUserMovieList.remove(list)
+                                                    database.updateUserMovieList(
+                                                        authManager.auth.currentUser!!.uid,
+                                                        newUserMovieList
+                                                    ) {
+                                                        Toast.makeText(
+                                                            context,
+                                                            "List deleted",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                        val navController = findNavController()
+                                                        navController.navigate(R.id.nav_lists)
+                                                    }
                                                 }
                                             }
                                         }
+                                        builder.setNegativeButton("Cancel") { dialog, _ ->
+                                            dialog.dismiss()
+                                        }
+                                        builder.show()
+                                        return true
                                     }
-                                    builder.setNegativeButton("Cancel") { dialog, _ ->
-                                        dialog.dismiss()
-                                    }
-                                    builder.show()
-                                    return true
-                                }
 
-                            })
+                                })
+                            }
                         }
                     }
                 }

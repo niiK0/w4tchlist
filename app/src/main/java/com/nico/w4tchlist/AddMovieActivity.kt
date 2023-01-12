@@ -80,9 +80,11 @@ class AddMovieActivity : AppCompatActivity(){
                                             get_movies.add(movie)
                                         }
                                     }
-                                    database.updateMovieListMovies(lid, get_movies){ success ->
-                                        Toast.makeText(this@AddMovieActivity, "Movie added successfully.", Toast.LENGTH_SHORT).show()
-                                        finish()
+                                    database.updateListMovieCount(lid, get_movies.size){
+                                        database.updateMovieListMovies(lid, get_movies){ success ->
+                                            Toast.makeText(this@AddMovieActivity, "Movie added successfully.", Toast.LENGTH_SHORT).show()
+                                            finish()
+                                        }
                                     }
                                 }
                             }
@@ -117,9 +119,11 @@ class AddMovieActivity : AppCompatActivity(){
                                                     get_movies.add(movie)
                                                 }
                                             }
-                                            database.updateMovieListMovies(lid, get_movies){ success ->
-                                                Toast.makeText(this@AddMovieActivity, "Movie added successfully.", Toast.LENGTH_SHORT).show()
-                                                finish()
+                                            database.updateListMovieCount(lid, get_movies.size){
+                                                database.updateMovieListMovies(lid, get_movies){ success ->
+                                                    Toast.makeText(this@AddMovieActivity, "Movie added successfully.", Toast.LENGTH_SHORT).show()
+                                                    finish()
+                                                }
                                             }
                                         }
                                     }
@@ -158,9 +162,11 @@ class AddMovieActivity : AppCompatActivity(){
                                                     get_movies.add(movie)
                                                 }
                                             }
-                                            database.updateMovieListMovies(lid, get_movies){ success ->
-                                                Toast.makeText(this@AddMovieActivity, "Movie added successfully.", Toast.LENGTH_SHORT).show()
-                                                finish()
+                                            database.updateListMovieCount(lid, get_movies.size){
+                                                database.updateMovieListMovies(lid, get_movies){ success ->
+                                                    Toast.makeText(this@AddMovieActivity, "Movie added successfully.", Toast.LENGTH_SHORT).show()
+                                                    finish()
+                                                }
                                             }
                                         }
                                     }
