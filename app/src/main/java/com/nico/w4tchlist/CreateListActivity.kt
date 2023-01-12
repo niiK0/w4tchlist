@@ -1,19 +1,19 @@
 package com.nico.w4tchlist
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.nico.w4tchlist.models.MovieList
+import com.nico.w4tchlist.models.*
 import com.nico.w4tchlist.services.AuthManager
 import com.nico.w4tchlist.services.DatabaseManager
+import java.util.*
 
 class CreateListActivity : AppCompatActivity(){
     private lateinit var nameEditText: EditText
-    private lateinit var descriptionEditText: EditText
-    private lateinit var privateCheckBox: CheckBox
     private lateinit var confirmButton: Button
     private lateinit var backButton: Button
     val database = DatabaseManager()
@@ -25,18 +25,23 @@ class CreateListActivity : AppCompatActivity(){
         authManager.setContext(this)
 
         nameEditText = findViewById(R.id.etName)
-        descriptionEditText = findViewById(R.id.etDescription)
-        privateCheckBox = findViewById(R.id.cbPrivate)
         confirmButton = findViewById(R.id.btnConfirm)
         backButton = findViewById(R.id.btnBack)
 
         confirmButton.setOnClickListener {
             val name = nameEditText.text.toString()
-            val description = descriptionEditText.text.toString()
-            val isPrivate = privateCheckBox.isChecked
+            val lid = UUID.randomUUID().toString()
 
-            database.getAdultValue(authManager.auth.currentUser!!.uid){
-                val adult = it
+            var movieList = MovieList(
+                name,
+                0,
+                mutableListOf(Movie(0, "", false, mutableListOf(Genre(0, "")), mutableListOf(Genre(0, "")), "", "", "", "", "", mutableListOf(
+                    ProdCompany(0, "")
+                ), mutableListOf(Language("")))
+            ))
+
+            database.createList(lid, authManager.auth.currentUser!!.uid, movieList) {
+                finish()
             }
         }
 

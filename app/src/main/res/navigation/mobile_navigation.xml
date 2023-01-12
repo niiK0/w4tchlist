@@ -19,6 +19,23 @@
         android:label="@string/menu_lists"
         tools:layout="@layout/fragment_lists"
         >
+        <action
+            android:id="@+id/action_lists_to_list_open"
+            app:destination="@id/nav_list_open">
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_list_open"
+        android:name="com.nico.w4tchlist.ui.lists.ListOpenFragment"
+        android:label="@string/menu_list_open"
+        tools:layout="@layout/fragment_list_open">
+        <argument android:name="movie_list"
+            app:argType="com.nico.w4tchlist.models.MovieList"
+            app:nullable="true"/>
+        <argument
+            android:name="lid"
+            app:argType="string" />
     </fragment>
 
     <fragment
@@ -26,7 +43,8 @@
         android:name="com.nico.w4tchlist.ui.genres.GenresFragment"
         android:label="@string/menu_genres"
         tools:layout="@layout/fragment_genres"
-        ><argument android:name="genre_id"
+        >
+        <argument android:name="genre_id"
         app:argType="integer"
         android:defaultValue="0"
         app:nullable="false"/>

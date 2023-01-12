@@ -1,7 +1,9 @@
 package com.nico.w4tchlist.ui.genres
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nico.w4tchlist.GetDataFuns
+import com.nico.w4tchlist.MovieActivity
 import com.nico.w4tchlist.MovieAdapter
 import com.nico.w4tchlist.databinding.FragmentGenresBinding
 import com.nico.w4tchlist.models.Movie
@@ -51,57 +54,105 @@ class GenresFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val data_funs = GetDataFuns()
 
         binding.rvMoviesList.layoutManager = LinearLayoutManager(this.context)
         binding.rvMoviesList.setHasFixedSize(true)
 
+        if(authManager.auth.currentUser != null){
+            database.getAdultValue(authManager.auth.currentUser!!.uid) {
+                val adult = it
+                getMovies(adult)
+            }
+        }else{
+            getMovies(false)
+        }
+    }
+
+    fun getMovies(adult : Boolean){
+        val data_funs = GetDataFuns()
+
         val bundle = requireArguments()
         var genre_id = 0
 
-        database.getAdultValue(authManager.auth.currentUser!!.uid){
-            val adult = it
+        val args = GenresFragmentArgs.fromBundle(bundle)
+        genre_id = args.genreId
 
-            if(bundle != null){
-                val args = GenresFragmentArgs.fromBundle(bundle)
-                genre_id = args.genreId
+        if(args.genreId != 0){
+            data_funs.getMovieGenreData(genre_id, 1, adult) { movies: List<Movie>, cur_page: Int, max_pages: Int ->
+                val adapter = MovieAdapter(movies)
+                binding.rvMoviesList.adapter = adapter
 
-                if(args.genreId != 0){
-                    data_funs.getMovieGenreData(genre_id, 1, adult) { movies: List<Movie>, cur_page: Int, max_pages: Int ->
-                        binding.rvMoviesList.adapter = MovieAdapter(movies)
-                        max_Pages = max_pages
-                        cur_Page = cur_page
-                        binding.tvPages.text = cur_Page.toString() + " / " + max_Pages.toString()
+                max_Pages = max_pages
+                cur_Page = cur_page
+                val pages_string = "$cur_page / $max_pages"
+                binding.tvPages.text = pages_string
+
+                adapter.setOnItemClickListener(object: MovieAdapter.onItemClickListener{
+                    override fun onItemClick(position: Int) {
+                        data_funs.getSpecificMovieData(movies[position].id!!){movie : Movie ->
+                            val intent = Intent(context, MovieActivity::class.java)
+                            intent.putExtra("movie", movie)
+                            startActivity(intent)
+                        }
                     }
-                }
+
+                })
             }
+        }
 
-            binding.btnNext.setOnClickListener{
-                if(cur_Page<max_Pages) {
-                    cur_Page++
-                    data_funs.getMovieGenreData(genre_id, cur_Page, adult) { movies: List<Movie>, cur_page: Int, max_pages: Int ->
-                        binding.rvMoviesList.adapter = MovieAdapter(movies)
-                        max_Pages = max_pages
-                        cur_Page = cur_page
-                        binding.tvPages.text = cur_Page.toString() + " / " + max_Pages.toString()
-                    }
-                }else{
-                    Toast.makeText(this.context, "You are on the last page.", Toast.LENGTH_SHORT).show()
+        binding.btnNext.setOnClickListener{
+            if(cur_Page<max_Pages) {
+                cur_Page++
+                data_funs.getMovieGenreData(genre_id, cur_Page, adult) { movies: List<Movie>, cur_page: Int, max_pages: Int ->
+                    val adapter = MovieAdapter(movies)
+                    binding.rvMoviesList.adapter = adapter
+
+                    max_Pages = max_pages
+                    cur_Page = cur_page
+                    val pages_string = "$cur_page / $max_pages"
+                    binding.tvPages.text = pages_string
+
+                    adapter.setOnItemClickListener(object: MovieAdapter.onItemClickListener{
+                        override fun onItemClick(position: Int) {
+                            data_funs.getSpecificMovieData(movies[position].id!!){movie : Movie ->
+                                val intent = Intent(context, MovieActivity::class.java)
+                                intent.putExtra("movie", movie)
+                                startActivity(intent)
+                            }
+                        }
+
+                    })
                 }
+            }else{
+                Toast.makeText(this.context, "You are on the last page.", Toast.LENGTH_SHORT).show()
             }
+        }
 
-            binding.btnPrevious.setOnClickListener{
-                if(cur_Page>1) {
-                    cur_Page--
-                    data_funs.getMovieGenreData(genre_id, cur_Page, adult) { movies: List<Movie>, cur_page: Int, max_pages: Int ->
-                        binding.rvMoviesList.adapter = MovieAdapter(movies)
-                        max_Pages = max_pages
-                        cur_Page = cur_page
-                        binding.tvPages.text = cur_Page.toString() + " / " + max_Pages.toString()
-                    }
-                }else{
-                    Toast.makeText(this.context, "You are on the first page.", Toast.LENGTH_SHORT).show()
+        binding.btnPrevious.setOnClickListener{
+            if(cur_Page>1) {
+                cur_Page--
+                data_funs.getMovieGenreData(genre_id, cur_Page, adult) { movies: List<Movie>, cur_page: Int, max_pages: Int ->
+                    val adapter = MovieAdapter(movies)
+                    binding.rvMoviesList.adapter = adapter
+
+                    max_Pages = max_pages
+                    cur_Page = cur_page
+                    val pages_string = "$cur_page / $max_pages"
+                    binding.tvPages.text = pages_string
+
+                    adapter.setOnItemClickListener(object: MovieAdapter.onItemClickListener{
+                        override fun onItemClick(position: Int) {
+                            data_funs.getSpecificMovieData(movies[position].id!!){movie : Movie ->
+                                val intent = Intent(context, MovieActivity::class.java)
+                                intent.putExtra("movie", movie)
+                                startActivity(intent)
+                            }
+                        }
+
+                    })
                 }
+            }else{
+                Toast.makeText(this.context, "You are on the first page.", Toast.LENGTH_SHORT).show()
             }
         }
     }

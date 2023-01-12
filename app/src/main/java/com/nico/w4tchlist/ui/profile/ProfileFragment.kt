@@ -168,7 +168,9 @@ class ProfileFragment : Fragment() {
             authManager.updateUserPassword(password)
         }
 
-        database.updateAdult(binding.cbAdult.isChecked, authManager.auth.currentUser!!.uid)
+        database.updateAdult(binding.cbAdult.isChecked, authManager.auth.currentUser!!.uid){
+
+        }
 
         Toast.makeText(this.context, "Successfully saved", Toast.LENGTH_SHORT).show()
         val navController = findNavController()

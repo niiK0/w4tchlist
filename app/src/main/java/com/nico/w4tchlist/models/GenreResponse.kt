@@ -9,6 +9,4 @@ data class GenreResponse(
     @SerializedName("genres")
     val genres : List<Genre>
 
-) : Parcelable{
-    constructor() : this(mutableListOf())
-}
+) : Parcelable

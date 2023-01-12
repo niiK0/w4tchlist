@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.nico.w4tchlist.models.Movie
 import kotlinx.android.synthetic.main.movie_item.view.*
@@ -34,6 +35,10 @@ class MovieActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.tvDate).text = movie.release?.take(4)
             val rate_string = "${Math.round(movie.rate!!.toFloat() * 10.0) / 10.0}/10"
             findViewById<TextView>(R.id.tvRate).text = rate_string
+
+            if(movie.adult == true){
+                findViewById<ImageView>(R.id.ivAdult).isVisible = true
+            }
 
             //GENRE
             var genre_string = ""

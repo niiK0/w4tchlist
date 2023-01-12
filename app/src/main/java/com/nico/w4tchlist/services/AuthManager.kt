@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
@@ -29,7 +30,11 @@ class AuthManager {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     updateUserUsername(username)
-                    database.createUser(auth.currentUser!!.uid)
+                    database.createUser(auth.currentUser!!.uid, email){
+                        if(!it){
+                            Log.w("TAG", "There was an error writing to database.")
+                        }
+                    }
                     updateUI()
                     callback(true)
                 } else {

@@ -7,5 +7,5 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Language(
     @SerializedName("english_name")
-    val name : String?
+    val name : String? = null
 ) : Parcelable

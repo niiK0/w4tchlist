@@ -39,6 +39,16 @@
             android:exported="false"
             android:label="Movie details">
         </activity>
+
+        <activity android:name=".AddMovieActivity"
+            android:exported="false"
+            android:label="Add movie">
+        </activity>
+
+        <activity android:name=".AddOwnerActivity"
+            android:exported="false"
+            android:label="Add owner">
+        </activity>
     </application>
 
 </manifest>

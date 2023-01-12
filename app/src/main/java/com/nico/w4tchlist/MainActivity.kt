@@ -14,6 +14,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.nico.w4tchlist.databinding.ActivityMainBinding
 import com.nico.w4tchlist.services.AuthManager
+import com.nico.w4tchlist.services.DatabaseManager
 import com.nico.w4tchlist.ui.search.SearchFragmentDirections
 
 class MainActivity : AppCompatActivity() {
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var search_view: androidx.appcompat.widget.SearchView
     val authManager = AuthManager()
+    val database = DatabaseManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +58,23 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         authManager.updateFirstTime()
+        if(authManager.auth.currentUser != null){
+            database.getUserMovieList(authManager.auth.currentUser!!.uid){
+                if(it != null){
+                    val newList = it.toMutableList()
+                    if(newList.isNotEmpty()){
+                        for(list in it){
+                            database.getMovieList(list){ movieList ->
+                                if(movieList == null){
+                                    newList.remove(list)
+                                    database.updateUserMovieList(authManager.auth.currentUser!!.uid, newList){}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
