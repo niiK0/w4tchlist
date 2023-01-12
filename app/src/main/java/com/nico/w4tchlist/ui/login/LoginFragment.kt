@@ -1,11 +1,17 @@
 package com.nico.w4tchlist.ui.login
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -41,6 +47,7 @@ class LoginFragment : Fragment() {
         return root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -59,6 +66,7 @@ class LoginFragment : Fragment() {
 
             authManager.login(email, password) { success ->//
                 if (success) {
+                    createSimpleNotification(this.requireContext(), "Login", "You have successfully signed in!")
                     Toast.makeText(this.context, "Successfully signed in", Toast.LENGTH_SHORT).show()
                     val navController = findNavController()
                     if(navController.currentDestination?.id != R.id.nav_home){
@@ -76,6 +84,36 @@ class LoginFragment : Fragment() {
                 navController.navigate(R.id.nav_register)
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun createSimpleNotification(context: Context, title: String, message: String) {
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        // Create a unique ID for the notification channel
+        val channelId = "my_channel_id"
+
+        // Create a notification channel (for devices running Android O or later)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelName = "My Channel"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(channelId, channelName, importance)
+            channel.enableLights(true)
+            channel.lightColor = Color.RED
+            channel.enableVibration(true)
+            channel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        // Build the notification
+        val builder = Notification.Builder(context, channelId)
+            .setSmallIcon(R.drawable.ic_menu_person)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setAutoCancel(true)
+
+        // Show the notification
+        notificationManager.notify(0, builder.build())
     }
 
     override fun onDestroyView() {
