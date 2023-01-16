@@ -34,33 +34,39 @@ class AddOwnerActivity : AppCompatActivity(){
         confirmButton.setOnClickListener {
             val email = emailEditText.text.toString()
 
-            database.findUserByEmail(email){ userId ->
-                if(userId != null){
-                    val uid = userId
-                    database.getUserMovieList(uid){ userList ->
-                        if(userList != null){
-                            val newList = userList.toMutableList()
-                            if(newList.isNotEmpty()) {
+            if(email != authManager.auth.currentUser!!.email){
+                database.findUserByEmail(email){ userId ->
+                    if(userId != null){
+                        val uid = userId
+                        Log.d("TAG", "LID CHECK 1: $lid")
+                        database.getUserMovieList(uid){ userList ->
+                            if(userList != null){
+                                val newList = userList.toMutableList()
                                 if(newList[0] == ""){
                                     newList[0] = lid
                                 }else{
                                     newList.add(lid)
                                 }
-                            }
-                            database.updateUserMovieList(uid, newList){
-                                Toast.makeText(this, "User added successfully.", Toast.LENGTH_SHORT).show()
-                                finish()
+                                Log.d("TAG", "LID CHECK 2: $lid")
+                                for(test in newList){
+                                    Log.d("TAG", "TEST LIST: $test")
+                                }
+                                database.updateUserMovieList(uid, newList){
+                                    Toast.makeText(this, "User added successfully.", Toast.LENGTH_SHORT).show()
+                                    finish()
+                                }
                             }
                         }
+                    }else{
+                        Toast.makeText(this, "User not found.", Toast.LENGTH_SHORT).show()
+                        finish()
                     }
-                }else{
-                    Toast.makeText(this, "User not found.", Toast.LENGTH_SHORT).show()
-                    finish()
                 }
+            }else{
+                emailEditText.error = "You can't add yourself!"
             }
 
         }
-
         backButton.setOnClickListener {
             // Finish the activity and return to the fragment
             finish()

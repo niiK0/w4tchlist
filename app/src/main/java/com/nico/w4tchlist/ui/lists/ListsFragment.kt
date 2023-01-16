@@ -65,6 +65,7 @@ class ListsFragment : Fragment() {
 
         var userMovieList = mutableListOf<String>()
         var movieLists = mutableListOf<MovieList>()
+        var movieListsLid = mutableListOf<String>()
 
         //get user's lists from db
         database.getUserMovieList(authManager.auth.currentUser!!.uid){ userMovieLists ->
@@ -78,59 +79,10 @@ class ListsFragment : Fragment() {
                     for(list in userMovieList){
                         database.getMovieList(list) { movieList ->
                             if(movieList != null) {
-                                movieLists.add(movieList!!)
-
-                                val adapter = ListsAdapter(movieLists)
-                                binding.rvListsList.adapter = adapter
-
-                                adapter.setOnItemClickListener(object :
-                                    ListsAdapter.onItemClickListener {
-                                    override fun onItemClick(position: Int) {
-                                        val navController = findNavController()
-                                        val directions =
-                                            ListsFragmentDirections.actionListsToListOpen(
-                                                movieLists[position],
-                                                list
-                                            )
-                                        navController.navigate(directions)
-                                    }
-                                })
-
-                                adapter.setOnItemClickListener(object :
-                                    ListsAdapter.onItemLongClickListener {
-                                    override fun onItemLongClick(position: Int): Boolean {
-                                        val builder = AlertDialog.Builder(requireContext())
-                                        builder.setTitle("Delete list")
-                                        builder.setMessage("Are you sure you want to delete this list?")
-                                        builder.setPositiveButton("Delete") { _, _ ->
-                                            database.deleteList(list) {
-                                                database.getUserMovieList(authManager.auth.currentUser!!.uid) { userMovieList ->
-                                                    val newUserMovieList =
-                                                        userMovieList!!.toMutableList()
-                                                    newUserMovieList.remove(list)
-                                                    database.updateUserMovieList(
-                                                        authManager.auth.currentUser!!.uid,
-                                                        newUserMovieList
-                                                    ) {
-                                                        Toast.makeText(
-                                                            context,
-                                                            "List deleted",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                        val navController = findNavController()
-                                                        navController.navigate(R.id.nav_lists)
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        builder.setNegativeButton("Cancel") { dialog, _ ->
-                                            dialog.dismiss()
-                                        }
-                                        builder.show()
-                                        return true
-                                    }
-
-                                })
+                                movieLists.add(movieList)
+                                movieListsLid.add(list)
+                                if(list == userMovieList[userMovieList.size-1])
+                                    doEverything(movieLists, movieListsLid)
                             }
                         }
                     }
@@ -152,6 +104,61 @@ class ListsFragment : Fragment() {
             navController.navigate(R.id.nav_home)
         }
 
+    }
+
+    fun doEverything(movieLists : List<MovieList>, lid: List<String>){
+        val adapter = ListsAdapter(movieLists)
+        binding.rvListsList.adapter = adapter
+
+        adapter.setOnItemClickListener(object :
+            ListsAdapter.onItemClickListener {
+            override fun onItemClick(position: Int) {
+                val navController = findNavController()
+                val directions =
+                    ListsFragmentDirections.actionListsToListOpen(
+                        movieLists[position],
+                        lid[position]
+                    )
+                Log.d("TAG", "LIST ID: ${lid[position]} WITH NAME ${movieLists[position].name}")
+                navController.navigate(directions)
+            }
+        })
+
+        adapter.setOnItemClickListener(object :
+            ListsAdapter.onItemLongClickListener {
+            override fun onItemLongClick(position: Int): Boolean {
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Delete list")
+                builder.setMessage("Are you sure you want to delete this list?")
+                builder.setPositiveButton("Delete") { _, _ ->
+                    database.deleteList(lid[position]) {
+                        database.getUserMovieList(authManager.auth.currentUser!!.uid) { userMovieList ->
+                            val newUserMovieList =
+                                userMovieList!!.toMutableList()
+                            newUserMovieList.remove(lid[position])
+                            database.updateUserMovieList(
+                                authManager.auth.currentUser!!.uid,
+                                newUserMovieList
+                            ) {
+                                Toast.makeText(
+                                    context,
+                                    "List deleted",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                val navController = findNavController()
+                                navController.navigate(R.id.nav_lists)
+                            }
+                        }
+                    }
+                }
+                builder.setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                builder.show()
+                return true
+            }
+
+        })
     }
 
     override fun onDestroyView() {

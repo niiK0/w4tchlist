@@ -73,15 +73,13 @@ class AddMovieActivity : AppCompatActivity(){
                             database.getMovieList(lid){ list ->
                                 if(list != null){
                                     var get_movies = list.movies!!.toMutableList()
-                                    if(get_movies.isNotEmpty()) {
-                                        if(list.movies[0].id == 0){
-                                            get_movies[0] = movie
-                                        }else{
-                                            get_movies.add(movie)
-                                        }
+                                    if(list.movies[0].id == 0){
+                                        get_movies[0] = movie
+                                    }else{
+                                        get_movies.add(movie)
                                     }
                                     database.updateListMovieCount(lid, get_movies.size){
-                                        database.updateMovieListMovies(lid, get_movies){ success ->
+                                        database.updateMovieListMovies(lid, get_movies){
                                             Toast.makeText(this@AddMovieActivity, "Movie added successfully.", Toast.LENGTH_SHORT).show()
                                             finish()
                                         }
@@ -113,9 +111,9 @@ class AddMovieActivity : AppCompatActivity(){
                                         if(list != null){
                                             var get_movies = list.movies!!.toMutableList()
                                             if(get_movies.isNotEmpty()) {
-                                                if (list.movies[0].id == 0) {
+                                                if(list.movies[0].id == 0){
                                                     get_movies[0] = movie
-                                                } else {
+                                                }else{
                                                     get_movies.add(movie)
                                                 }
                                             }
