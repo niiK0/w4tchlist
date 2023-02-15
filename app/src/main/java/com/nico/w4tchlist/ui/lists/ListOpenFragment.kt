@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.nico.w4tchlist.*
 import com.nico.w4tchlist.databinding.FragmentListOpenBinding
 import com.nico.w4tchlist.models.Movie
@@ -26,6 +27,9 @@ import com.nico.w4tchlist.services.DatabaseManager
 class ListOpenFragment : Fragment() {
 
     private var _binding: FragmentListOpenBinding? = null
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var movieLid : String
+    private lateinit var movieList : MovieList
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -63,73 +67,16 @@ class ListOpenFragment : Fragment() {
 
         val fab = binding.addList
 
-        val args = ListOpenFragmentArgs.fromBundle(bundle)
-        val movieList : MovieList = args.movieList as MovieList
-        val movieLid : String = args.lid
-
-        if(movieList.movies!![0].id != 0){
-            val adapter = MovieAdapterList(movieList.movies!!)
-            binding.rvMoviesList.adapter = adapter
-
-            adapter.setOnItemClickListener(object: MovieAdapterList.onItemClickListener{
-                override fun onItemClick(position: Int) {
-                    val intent = Intent(context, MovieActivity::class.java)
-                    intent.putExtra("movie", movieList.movies[position])
-                    startActivity(intent)
-                }
-            })
-
-            adapter.setOnItemClickListener(object: MovieAdapterList.onItemLongClickListener{
-                override fun onItemLongClick(position: Int): Boolean {
-                    val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle("Delete movie")
-                    builder.setMessage("Are you sure you want to delete this movie?")
-                    builder.setPositiveButton("Delete") { _, _ ->
-                        val newList = movieList.movies.toMutableList()
-                        newList.removeAt(position)
-                        if(newList.isEmpty()){
-                            database.deleteList(movieLid){
-                                database.getUserMovieList(authManager.auth.currentUser!!.uid){ userMovieList ->
-                                    if(userMovieList != null){
-                                        val newUserMovieList = userMovieList.toMutableList()
-                                        newUserMovieList.remove(movieLid)
-                                        database.updateListMovieCount(movieLid, newList.size) {
-                                            database.updateUserMovieList(
-                                                authManager.auth.currentUser!!.uid,
-                                                newUserMovieList
-                                            ) {
-                                                Toast.makeText(
-                                                    context,
-                                                    "List deleted",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                                val navController = findNavController()
-                                                navController.navigate(R.id.nav_lists)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }else{
-                            database.updateListMovieCount(movieLid, newList.size) {
-                                database.updateListMovies(movieLid, newList) {
-                                    Toast.makeText(
-                                        context,
-                                        "Movie successfully deleted",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
-                        }
-                    }
-                    builder.setNegativeButton("Cancel") { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    builder.show()
-                    return true
-                }
-            })
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_lists_open)
+        swipeRefreshLayout.setOnRefreshListener {
+            reloadFragment()
         }
+
+        val args = ListOpenFragmentArgs.fromBundle(bundle)
+        movieList = args.movieList as MovieList
+        movieLid = args.lid
+
+        setMovies()
 
         // Set an OnClickListener on the FAB to start the AddItemActivity
         fab.setOnClickListener {
@@ -155,6 +102,83 @@ class ListOpenFragment : Fragment() {
             popup.show()
         }
 
+    }
+
+    fun setMovies(){
+        if(movieList.movies!![0].id != 0){
+            val adapter = MovieAdapterList(movieList.movies!!)
+            binding.rvMoviesList.adapter = adapter
+
+            adapter.setOnItemClickListener(object: MovieAdapterList.onItemClickListener{
+                override fun onItemClick(position: Int) {
+                    val intent = Intent(context, MovieActivity::class.java)
+                    intent.putExtra("movie", movieList.movies!![position])
+                    startActivity(intent)
+                }
+            })
+
+            adapter.setOnItemClickListener(object: MovieAdapterList.onItemLongClickListener{
+                override fun onItemLongClick(position: Int): Boolean {
+                    val builder = AlertDialog.Builder(requireContext())
+                    builder.setTitle("Delete movie")
+                    builder.setMessage("Are you sure you want to delete this movie?")
+                    builder.setPositiveButton("Delete") { _, _ ->
+                        val newList = movieList.movies!!.toMutableList()
+                        newList.removeAt(position)
+                        if(newList.isEmpty()){
+                            database.deleteList(movieLid){
+                                database.getUserMovieList(authManager.auth.currentUser!!.uid){ userMovieList ->
+                                    if(userMovieList != null){
+                                        val newUserMovieList = userMovieList.toMutableList()
+                                        newUserMovieList.remove(movieLid)
+                                        database.updateListMovieCount(movieLid, newList.size) {
+                                            database.updateUserMovieList(
+                                                authManager.auth.currentUser!!.uid,
+                                                newUserMovieList
+                                            ) {
+                                                Toast.makeText(
+                                                    context,
+                                                    "List deleted",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                reloadFragment()
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }else{
+                            database.updateListMovieCount(movieLid, newList.size) {
+                                database.updateListMovies(movieLid, newList) {
+                                    Toast.makeText(
+                                        context,
+                                        "Movie successfully deleted",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    reloadFragment()
+                                }
+                            }
+                        }
+                    }
+                    builder.setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    builder.show().window?.setBackgroundDrawableResource(R.color.grey)
+                    return true
+                }
+            })
+        }
+    }
+
+    private fun reloadFragment() {
+        Log.d("TAG", "refreshing fragment")
+        swipeRefreshLayout.isRefreshing = false
+        database.getMovieList(movieLid){
+            if(it != null){
+                movieList = it
+                setMovies()
+            }
+        }
     }
 
     override fun onDestroyView() {

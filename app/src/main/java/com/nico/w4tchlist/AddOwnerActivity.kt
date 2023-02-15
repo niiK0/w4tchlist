@@ -33,6 +33,7 @@ class AddOwnerActivity : AppCompatActivity(){
 
         confirmButton.setOnClickListener {
             val email = emailEditText.text.toString()
+            var owner_copy = false
 
             if(email != authManager.auth.currentUser!!.email){
                 database.findUserByEmail(email){ userId ->
@@ -41,19 +42,30 @@ class AddOwnerActivity : AppCompatActivity(){
                         Log.d("TAG", "LID CHECK 1: $lid")
                         database.getUserMovieList(uid){ userList ->
                             if(userList != null){
+                                //check if onwner already exists
                                 val newList = userList.toMutableList()
-                                if(newList[0] == ""){
-                                    newList[0] = lid
-                                }else{
-                                    newList.add(lid)
+
+                                for(l_lid in newList){
+                                    if(l_lid == lid){
+                                        owner_copy = true
+                                        Toast.makeText(this, "Target is already an owner!", Toast.LENGTH_SHORT).show()
+                                    }
                                 }
-                                Log.d("TAG", "LID CHECK 2: $lid")
-                                for(test in newList){
-                                    Log.d("TAG", "TEST LIST: $test")
-                                }
-                                database.updateUserMovieList(uid, newList){
-                                    Toast.makeText(this, "User added successfully.", Toast.LENGTH_SHORT).show()
-                                    finish()
+
+                                if(!owner_copy){
+                                    if(newList[0] == ""){
+                                        newList[0] = lid
+                                    }else{
+                                        newList.add(lid)
+                                    }
+                                    Log.d("TAG", "LID CHECK 2: $lid")
+                                    for(test in newList){
+                                        Log.d("TAG", "TEST LIST: $test")
+                                    }
+                                    database.updateUserMovieList(uid, newList){
+                                        Toast.makeText(this, "User added successfully.", Toast.LENGTH_SHORT).show()
+                                        finish()
+                                    }
                                 }
                             }
                         }

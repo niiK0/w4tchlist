@@ -23,6 +23,9 @@
             android:id="@+id/action_lists_to_list_open"
             app:destination="@id/nav_list_open">
         </action>
+        <action
+            android:id="@+id/action_nav_lists_self"
+            app:destination="@id/nav_lists" />
     </fragment>
 
     <fragment
@@ -36,6 +39,9 @@
         <argument
             android:name="lid"
             app:argType="string" />
+        <action
+            android:id="@+id/action_nav_list_open_self"
+            app:destination="@id/nav_list_open" />
     </fragment>
 
     <fragment

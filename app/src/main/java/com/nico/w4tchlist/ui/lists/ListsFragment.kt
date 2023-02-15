@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -17,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.nico.w4tchlist.*
 import com.nico.w4tchlist.databinding.FragmentListsBinding
@@ -28,6 +30,7 @@ import com.nico.w4tchlist.services.DatabaseManager
 class ListsFragment : Fragment() {
 
     private var _binding: FragmentListsBinding? = null
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -67,6 +70,11 @@ class ListsFragment : Fragment() {
         var movieLists = mutableListOf<MovieList>()
         var movieListsLid = mutableListOf<String>()
 
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_lists)
+        swipeRefreshLayout.setOnRefreshListener {
+            reloadFragment()
+        }
+
         //get user's lists from db
         database.getUserMovieList(authManager.auth.currentUser!!.uid){ userMovieLists ->
             if(userMovieLists != null){
@@ -97,13 +105,15 @@ class ListsFragment : Fragment() {
         }
 
     }
-
     val newListLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if(result.resultCode == Activity.RESULT_OK){
-            val navController = findNavController()
-            navController.navigate(R.id.nav_home)
+            Toast.makeText(
+                context,
+                "List created, slide down to refresh",
+                Toast.LENGTH_SHORT
+            ).show()
+            reloadFragment()
         }
-
     }
 
     fun doEverything(movieLists : List<MovieList>, lid: List<String>){
@@ -146,7 +156,8 @@ class ListsFragment : Fragment() {
                                     Toast.LENGTH_SHORT
                                 ).show()
                                 val navController = findNavController()
-                                navController.navigate(R.id.nav_lists)
+                                val directions = ListsFragmentDirections.actionNavListsSelf()
+                                navController.navigate(directions)
                             }
                         }
                     }
@@ -154,11 +165,19 @@ class ListsFragment : Fragment() {
                 builder.setNegativeButton("Cancel") { dialog, _ ->
                     dialog.dismiss()
                 }
-                builder.show()
+                builder.show().window?.setBackgroundDrawableResource(R.color.grey)
                 return true
             }
 
         })
+    }
+
+    private fun reloadFragment() {
+        Log.d("TAG", "refreshing fragment")
+        swipeRefreshLayout.isRefreshing = false
+        val navController = findNavController()
+        val directions = ListsFragmentDirections.actionNavListsSelf()
+        navController.navigate(directions)
     }
 
     override fun onDestroyView() {

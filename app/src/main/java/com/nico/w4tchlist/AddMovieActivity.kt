@@ -69,19 +69,31 @@ class AddMovieActivity : AppCompatActivity(){
 
                 adapter.setOnItemClickListener(object: MovieAdapter.onItemClickListener{
                     override fun onItemClick(position: Int) {
+                        var movie_copy = false
                         data_funs.getSpecificMovieData(movies[position].id!!){movie : Movie ->
                             database.getMovieList(lid){ list ->
                                 if(list != null){
+                                    //check if movie already exists
                                     var get_movies = list.movies!!.toMutableList()
-                                    if(list.movies[0].id == 0){
-                                        get_movies[0] = movie
-                                    }else{
-                                        get_movies.add(movie)
+
+                                    for(l_movie in get_movies){
+                                        if(l_movie == movie){
+                                            movie_copy = true
+                                            Toast.makeText(this@AddMovieActivity, "Movie is already on the list!", Toast.LENGTH_SHORT).show()
+                                        }
                                     }
-                                    database.updateListMovieCount(lid, get_movies.size){
-                                        database.updateMovieListMovies(lid, get_movies){
-                                            Toast.makeText(this@AddMovieActivity, "Movie added successfully.", Toast.LENGTH_SHORT).show()
-                                            finish()
+                                    if(!movie_copy){
+                                        if(list.movies[0].id == 0){
+                                            get_movies[0] = movie
+                                        }else{
+                                            get_movies.add(movie)
+                                        }
+
+                                        database.updateListMovieCount(lid, get_movies.size){
+                                            database.updateMovieListMovies(lid, get_movies){
+                                                Toast.makeText(this@AddMovieActivity, "Movie added successfully. Slide down to refresh!", Toast.LENGTH_SHORT).show()
+                                                finish()
+                                            }
                                         }
                                     }
                                 }

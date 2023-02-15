@@ -1,5 +1,6 @@
 package com.nico.w4tchlist
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -29,19 +30,25 @@ class CreateListActivity : AppCompatActivity(){
         backButton = findViewById(R.id.btnBack)
 
         confirmButton.setOnClickListener {
-            val name = nameEditText.text.toString()
+            val name = nameEditText
             val lid = UUID.randomUUID().toString()
 
-            var movieList = MovieList(
-                name,
-                0,
-                mutableListOf(Movie(0, "", false, mutableListOf(Genre(0, "")), mutableListOf(Genre(0, "")), "", "", "", "", "", mutableListOf(
-                    ProdCompany(0, "")
-                ), mutableListOf(Language("")))
-            ))
+            if(name.text.isEmpty()){
+                name.error = "List name cannot be empty"
+            }else{
+                var movieList = MovieList(
+                    name.text.toString(),
+                    0,
+                    mutableListOf(Movie(0, "", false, mutableListOf(Genre(0, "")), mutableListOf(Genre(0, "")), "", "", "", "", "", mutableListOf(
+                        ProdCompany(0, "")
+                    ), mutableListOf(Language("")))
+                ))
 
-            database.createList(lid, authManager.auth.currentUser!!.uid, movieList) {
-                finish()
+
+                database.createList(lid, authManager.auth.currentUser!!.uid, movieList) {
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                }
             }
         }
 
